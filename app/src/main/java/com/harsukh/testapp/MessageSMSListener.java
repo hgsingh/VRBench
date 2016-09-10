@@ -3,7 +3,10 @@ package com.harsukh.testapp;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
@@ -27,8 +30,8 @@ public class MessageSMSListener extends BroadcastReceiver {
             msg_body = new String[pdus.length];
             for (int i = 0; i < msgs.length; i++) {
                 msgs[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
-                msg_from[i] = msgs[i].getDisplayOriginatingAddress();
                 msg_body[i] = msgs[i].getMessageBody();
+                msg_from[i] = getContactName(context, msgs[i].getOriginatingAddress());
                 Toast.makeText(context, msg_body + " : " + msg_from, Toast.LENGTH_SHORT).show();
             }
             Intent intent1 = new Intent(context.getApplicationContext(), VRService.class);
@@ -41,4 +44,26 @@ public class MessageSMSListener extends BroadcastReceiver {
         }
     }
 
+    private String getContactName(Context context, String number) {
+        Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        String[] projection = new String[]{ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                ContactsContract.CommonDataKinds.Phone.NUMBER};
+
+        Cursor people = context.getContentResolver().query(uri, projection, null, null, null);
+
+        int indexName = people.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+        int indexNumber = people.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+
+        people.moveToFirst();
+        String name = null;
+        do {
+            if (people.getString(indexNumber).equalsIgnoreCase(number)) {
+                name = people.getString(indexName);
+                break;
+            }
+            // Do work...
+        } while (people.moveToNext());
+
+        return name;
+    }
 }
