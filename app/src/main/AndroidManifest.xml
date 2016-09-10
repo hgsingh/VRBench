@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" android:theme="@style/Theme.Transparent">
+        <activity android:name=".MainActivity" android:theme="@style/Theme.AppCompat">
         </activity>
         <receiver android:name=".MessageSMSListener">
             <intent-filter android:priority="1000">
