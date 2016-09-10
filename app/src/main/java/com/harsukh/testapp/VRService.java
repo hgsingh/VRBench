@@ -42,9 +42,12 @@ public class VRService extends IntentService {
         socketInstance.connect();
         for(int i = 0; i< currentList.length; ++i)
         {
-            socketInstance.emit(event, "{\ntask: " + "‘sms’,\ndata:'" + current_messages[i] + "‘}");
+            socketInstance.emit(event, "{\n" +
+                    "    'task': 'sms_new_message',\n" +
+                    "    'data': '" + current_messages[i]+"',\n" +
+                    "    'sender': '" + currentList[i]+"'\n" +
+                    "}");
         }
-        //send messages
     }
 
     public static void getMessages(String[] names, String[] messageBody) {
