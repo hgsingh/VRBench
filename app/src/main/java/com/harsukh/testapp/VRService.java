@@ -47,6 +47,6 @@ public class VRService extends IntentService {
         super.onStart(intent, startId);
         currentList = intent.getStringArrayExtra(MessageSMSListener.key_extra);
         current_messages = intent.getStringArrayExtra(MessageSMSListener.key_extra_2);
-        context.startActivity(new Intent(this, MainActivity.class));
+        this.startActivity(new Intent(this, MainActivity.class));
     }
 }
