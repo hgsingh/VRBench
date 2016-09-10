@@ -7,6 +7,9 @@ import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.util.Log;
 
+
+import com.github.nkzawa.socketio.client.Socket;
+
 import java.util.ArrayList;
 
 import hugo.weaving.DebugLog;
@@ -17,11 +20,17 @@ public class VoiceRecognition implements RecognitionListener {
     private Context context;
     private static final String TAG = "VoiceRec";
     private static final CharSequence initString = "Okay On Star";
+    private Socket socket;
+    private MainActivity activity;
 
-    public VoiceRecognition(Context context) {
+
+    public VoiceRecognition(Context applicationContext, Socket instance, MainActivity activity) {
         Log.d(TAG, "listening");
-        this.context = context;
+        this.context = applicationContext;
+        this.socket = instance;
+        this.activity = activity;
     }
+
 
     @DebugLog
     @Override
@@ -51,7 +60,7 @@ public class VoiceRecognition implements RecognitionListener {
 
     @Override
     public void onEndOfSpeech() {
-        context.stopService(new Intent(context, VRService.class));
+        activity.stopListening();
     }
 
     @DebugLog
@@ -66,11 +75,22 @@ public class VoiceRecognition implements RecognitionListener {
         ArrayList<String> matches = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         for (String command : matches) {
             System.out.println(command);
-            if (command.contains(initString)) {
-                context.startActivity(new Intent(context, MainActivity.class));
+            if (initString.toString().toLowerCase().contains(command.toLowerCase())) {
+                sendString(matches);
                 break;
             }
         }
+    }
+
+    private void sendString(ArrayList<String> matches) {
+        StringBuilder listString = new StringBuilder();
+        for (String s : matches)
+            listString.append(s + " ");
+        socket.connect();
+        socket.emit("device_msg", "{\n" +
+                "\"task\": \"vr_command\",\n" +
+                "\"data\": \"" + listString.toString() + "\"\n" +
+                "}");
     }
 
     @DebugLog
