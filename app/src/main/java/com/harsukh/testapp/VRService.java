@@ -12,8 +12,8 @@ public class VRService extends IntentService {
     private static SpeechRecognizer speechRecognizer = null;
     private static final String TAG = "VRService";
     private static final String event = "device_msg";
-    static String[] currentList;
-    static String[] current_messages;
+    String[] currentList;
+    String[] current_messages;
     private Intent mSpeechRecognizerIntent = null;
 
     /**
@@ -50,8 +50,10 @@ public class VRService extends IntentService {
         }
     }
 
-    public static void getMessages(String[] names, String[] messageBody) {
-        currentList = names;
-        current_messages = messageBody;
+    @Override
+    public void onStart(Intent intent, int startId) {
+        currentList = intent.getStringArrayExtra(MessageSMSListener.key_extra);
+        current_messages = intent.getStringArrayExtra(MessageSMSListener.key_extra_2);
+        System.out.println("here");
     }
 }

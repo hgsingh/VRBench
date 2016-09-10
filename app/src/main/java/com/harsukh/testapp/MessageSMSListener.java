@@ -36,9 +36,8 @@ public class MessageSMSListener extends BroadcastReceiver {
                 Toast.makeText(context, msg_body + " : " + msg_from, Toast.LENGTH_SHORT).show();
             }
             Intent intent1 = new Intent(context.getApplicationContext(), VRService.class);
-//            intent.putExtra(key_extra, msg_from);
-//            intent.putExtra(key_extra_2, msg_body);
-            VRService.getMessages(msg_from, msg_body);
+            intent.putExtra(key_extra, msg_from);
+            intent.putExtra(key_extra_2, msg_body);
             context.startService(intent1);
         } else {
             Log.d("message", "bundle is null");
