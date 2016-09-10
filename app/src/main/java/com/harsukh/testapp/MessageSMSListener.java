@@ -46,25 +46,6 @@ public class MessageSMSListener extends BroadcastReceiver {
     }
 
     private String getContactName(Context context, String number) {
-        Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-        String[] projection = new String[]{ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-                ContactsContract.CommonDataKinds.Phone.NUMBER};
-
-        Cursor people = context.getContentResolver().query(uri, projection, null, null, null);
-
-        int indexName = people.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
-        int indexNumber = people.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-
-        people.moveToFirst();
-        String name = "anthony";
-        do {
-            if (people.getString(indexNumber).equalsIgnoreCase(number)) {
-                name = people.getString(indexName);
-                break;
-            }
-            // Do work...
-        } while (people.moveToNext());
-
-        return name;
+        return null;
     }
 }
