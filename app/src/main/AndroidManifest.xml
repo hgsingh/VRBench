@@ -12,8 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity"/>
-        <receiver android:name=".MessageSMSListener">
-            <intent-filter>
+        <receiver android:name=".MessageSMSListener" >
+            <intent-filter android:priority="1000">
+
                 <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
             </intent-filter>
         </receiver>
