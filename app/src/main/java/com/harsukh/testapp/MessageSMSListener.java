@@ -14,6 +14,7 @@ import java.util.List;
 public class MessageSMSListener extends BroadcastReceiver {
     public static final String key_extra = "numbers";
     public static final String key_extra_2 = "msgs";
+    public static final String URI = "10.251.2.10";
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {

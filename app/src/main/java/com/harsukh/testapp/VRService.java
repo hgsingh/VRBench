@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 
+import com.github.nkzawa.socketio.client.Socket;
+
 public class VRService extends IntentService {
     private static SpeechRecognizer speechRecognizer = null;
     private static final String TAG = "VRService";
+    private static final String event = "device_msg";
     String[] currentList;
     String[] current_messages;
     private Intent mSpeechRecognizerIntent = null;
@@ -35,10 +38,12 @@ public class VRService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         currentList = intent.getStringArrayExtra(MessageSMSListener.key_extra);
-        currentList = intent.getStringArrayExtra(MessageSMSListener.key_extra_2);
-        for(int i = 0; i<currentList.length; ++i)
-        {
-//send messages
+        current_messages = intent.getStringArrayExtra(MessageSMSListener.key_extra_2);
+        Socket socketInstance = SocketObject.getInstance(MessageSMSListener.URI);
+        socketInstance.connect();
+        for (int i = 0; i < currentList.length; ++i) {
+            //send messages
+            socketInstance.emit(event, "{\ntask: " + "‘sms’,\ndata:'" + current_messages[i] + "‘}");
         }
     }
 }
