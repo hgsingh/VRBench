@@ -3,6 +3,7 @@ package com.harsukh.testapp;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Debug;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.util.Log;
@@ -18,9 +19,22 @@ public class VoiceRecognition implements RecognitionListener {
     private static final String TAG = "VoiceRec";
     private static final CharSequence initString = "Okay On Star";
 
-    public VoiceRecognition(Context context) {
+    private static VoiceRecognition VR = null;
+
+    private VoiceRecognition(Context context) {
+        Debug.waitForDebugger();
+
         Log.d(TAG, "listening");
         this.context = context;
+    }
+
+    public static VoiceRecognition getInstance(Context context) {
+        if (VR == null) {
+            VR = new VoiceRecognition(context);
+            return VR;
+        } else {
+            return VR;
+        }
     }
 
     @DebugLog
