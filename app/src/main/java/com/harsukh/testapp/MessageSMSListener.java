@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Contacts;
 import android.provider.ContactsContract;
 import android.telephony.SmsMessage;
 import android.util.Log;
@@ -45,6 +46,36 @@ public class MessageSMSListener extends BroadcastReceiver {
     }
 
     private String getContactName(Context context, String number) {
-        return null;
+        Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        // Columns you want to return
+        String[] projection = new String[]{ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                ContactsContract.CommonDataKinds.Phone.NUMBER};
+
+        // Query for all people that match the number stored in the contact list.
+        Cursor people = context.getContentResolver().query(uri, projection, ContactsContract.CommonDataKinds.Phone.NUMBER + "='" + number + "'", null, null);
+
+        // Index of the Column, not Row
+        int indexName = people.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+        int indexNumber = people.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+
+        String name = null;
+        // If any results were fetched from the query then return the name matching results, else return number.
+        if(people.moveToFirst()) {
+            do {
+                // Make sure the number in contacts matches number received from SMS.
+                if (people.getString(indexNumber).equalsIgnoreCase(number)) {
+                    name = people.getString(indexName);
+                    break;
+                }
+                else {
+                    name = number;
+                }
+                // Do work...
+            } while (people.moveToNext());
+        } else {
+            name = number;
+        }
+
+        return name;
     }
 }
