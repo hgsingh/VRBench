@@ -22,16 +22,16 @@ public class VRService extends IntentService {
      */
     public VRService() {
         super(VRService.class.getSimpleName());
-        if (speechRecognizer == null) {
-            speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
-        }
-        if (mSpeechRecognizerIntent == null) {
-            mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-            mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
-
-        }
-        speechRecognizer.setRecognitionListener(new VoiceRecognition(this));
-        speechRecognizer.startListening(mSpeechRecognizerIntent);
+//        if (speechRecognizer == null) {
+//            speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+//        }
+//        if (mSpeechRecognizerIntent == null) {
+//            mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+//            mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
+//
+//        }
+//        speechRecognizer.setRecognitionListener(new VoiceRecognition(this));
+//        speechRecognizer.startListening(mSpeechRecognizerIntent);
     }
 
 
