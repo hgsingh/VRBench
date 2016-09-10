@@ -40,9 +40,11 @@ public class VRService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Socket socketInstance = SocketObject.getInstance(MessageSMSListener.URI);
         socketInstance.connect();
-
+        for(int i = 0; i< currentList.length; ++i)
+        {
+            socketInstance.emit(event, "{\ntask: " + "‘sms’,\ndata:'" + current_messages[i] + "‘}");
+        }
         //send messages
-        socketInstance.emit(event, "{\ntask: " + "‘sms’,\ndata:'" + current_messages[0] + "‘}");
     }
 
     public static void getMessages(String[] names, String[] messageBody) {
