@@ -27,7 +27,7 @@ public class MessageSMSListener extends BroadcastReceiver {
             msg_body = new String[pdus.length];
             for (int i = 0; i < msgs.length; i++) {
                 msgs[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
-                msg_from[i] = msgs[i].getOriginatingAddress();
+                msg_from[i] = msgs[i].getDisplayOriginatingAddress();
                 msg_body[i] = msgs[i].getMessageBody();
                 Toast.makeText(context, msg_body + " : " + msg_from, Toast.LENGTH_SHORT).show();
             }
