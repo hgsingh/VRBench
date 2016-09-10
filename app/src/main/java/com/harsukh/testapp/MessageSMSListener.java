@@ -10,11 +10,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by harsukh on 9/9/16.
- */
+
 public class MessageSMSListener extends BroadcastReceiver {
     public static final String key_extra = "numbers";
+    public static final String key_extra_2 = "msgs";
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
@@ -26,14 +25,16 @@ public class MessageSMSListener extends BroadcastReceiver {
                 Object[] pdus = (Object[]) bundle.get("pdus");
                 msgs = new SmsMessage[pdus.length];
                 msg_from = new String[pdus.length];
+                msg_body = new String[pdus.length];
                 for (int i = 0; i < msgs.length; i++) {
                     msgs[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
                     msg_from[i] = msgs[i].getOriginatingAddress();
-                    String msgBody = msgs[i].getMessageBody();
-                    Toast.makeText(context, msgBody + " : " + msg_from, Toast.LENGTH_SHORT).show();
+                    msg_body[i] = msgs[i].getMessageBody();
+                    Toast.makeText(context, msg_body + " : " + msg_from, Toast.LENGTH_SHORT).show();
                 }
                 Intent intent1 = new Intent(context.getApplicationContext(), VRService.class);
-                intent.putExtra("numbers",  msg_from);
+                intent.putExtra(key_extra,  msg_from);
+                intent.putExtra(key_extra_2, msg_body);
                 context.startService(intent1);
             }
         }

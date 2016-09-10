@@ -2,7 +2,6 @@ package com.harsukh.testapp;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.speech.RecognitionService;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 
@@ -10,6 +9,7 @@ public class VRService extends IntentService {
     private static SpeechRecognizer speechRecognizer = null;
     private static final String TAG = "VRService";
     String[] currentList;
+    String[] current_messages;
     private Intent mSpeechRecognizerIntent = null;
 
     /**
@@ -35,9 +35,10 @@ public class VRService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         currentList = intent.getStringArrayExtra(MessageSMSListener.key_extra);
+        currentList = intent.getStringArrayExtra(MessageSMSListener.key_extra_2);
         for(int i = 0; i<currentList.length; ++i)
         {
-
+//send messages
         }
     }
 }

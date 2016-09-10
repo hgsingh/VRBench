@@ -3,9 +3,7 @@ package com.harsukh.testapp;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.speech.RecognitionListener;
-import android.speech.RecognitionService;
 import android.speech.SpeechRecognizer;
 import android.util.Log;
 
@@ -13,9 +11,7 @@ import java.util.ArrayList;
 
 import hugo.weaving.DebugLog;
 
-/**
- * Created by harsukh on 9/9/16.
- */
+
 public class VoiceRecognition implements RecognitionListener {
 
     private Context context;
