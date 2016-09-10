@@ -55,7 +55,7 @@ public class MessageSMSListener extends BroadcastReceiver {
         int indexNumber = people.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
 
         people.moveToFirst();
-        String name = null;
+        String name = "anthony";
         do {
             if (people.getString(indexNumber).equalsIgnoreCase(number)) {
                 name = people.getString(indexName);
