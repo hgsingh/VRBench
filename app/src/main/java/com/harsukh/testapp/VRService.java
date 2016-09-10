@@ -15,7 +15,6 @@ public class VRService extends IntentService {
     private static final String event = "device_msg";
     String[] currentList;
     String[] current_messages;
-    Context context;
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -47,6 +46,6 @@ public class VRService extends IntentService {
         super.onStart(intent, startId);
         currentList = intent.getStringArrayExtra(MessageSMSListener.key_extra);
         current_messages = intent.getStringArrayExtra(MessageSMSListener.key_extra_2);
-        this.startActivity(new Intent(this, MainActivity.class));
+        this.startActivity(new Intent(this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 }
