@@ -13,14 +13,15 @@ public class MainActivity extends AppCompatActivity {
 
     Intent mSpeechRecognizerIntent = null;
     private static SpeechRecognizer speechRecognizer = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        startListeningActivity();
     }
 
-    private void startListening()
-    {
+    public void startListeningActivity() {
         if (speechRecognizer == null) {
             speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         }
@@ -33,8 +34,14 @@ public class MainActivity extends AppCompatActivity {
         speechRecognizer.startListening(mSpeechRecognizerIntent);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopListeningActivity();
+    }
+
     // stops the service
-    public void stopListening() {
+    public void stopListeningActivity() {
         if (speechRecognizer != null) {
             speechRecognizer.stopListening();
             speechRecognizer.cancel();
@@ -43,15 +50,21 @@ public class MainActivity extends AppCompatActivity {
         speechRecognizer = null;
     }
 
-    public void restart()
-    {
-        stopListening();
-        startListening();
+    public void restart() {
+        speechRecognizer.startListening(mSpeechRecognizerIntent);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        restart();
+    }
+
+    public void endOfSpeech() {
+        speechRecognizer.stopListening();
+    }
+
+    public void setText(String string) {
+        EditText editText = (EditText) findViewById(R.id.edit);
+        editText.append(string);
     }
 }

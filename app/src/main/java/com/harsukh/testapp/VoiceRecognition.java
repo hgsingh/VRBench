@@ -60,13 +60,14 @@ public class VoiceRecognition implements RecognitionListener {
 
     @Override
     public void onEndOfSpeech() {
-        activity.stopListening();
+        activity.endOfSpeech();
     }
 
     @DebugLog
     @Override
     public void onError(int i) {
-
+        activity.stopListeningActivity();
+        activity.startListeningActivity();
     }
 
     @DebugLog
@@ -75,22 +76,21 @@ public class VoiceRecognition implements RecognitionListener {
         ArrayList<String> matches = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         for (String command : matches) {
             System.out.println(command);
-            if (initString.toString().toLowerCase().contains(command.toLowerCase())) {
-                sendString(matches);
-                break;
-            }
         }
+        sendString(matches);
     }
 
     private void sendString(ArrayList<String> matches) {
         StringBuilder listString = new StringBuilder();
-        for (String s : matches)
+        for (String s : matches) {
             listString.append(s + " ");
+        }
         socket.connect();
         socket.emit("device_msg", "{\n" +
                 "\"task\": \"vr_command\",\n" +
                 "\"data\": \"" + listString.toString() + "\"\n" +
                 "}");
+        activity.setText(listString.toString());
     }
 
     @DebugLog

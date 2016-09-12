@@ -18,18 +18,18 @@ public class VRService extends IntentService {
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
-     * <p>
+     * <p/>
      * Used to name the worker thread, important only for debugging.
      */
     public VRService() {
         super(VRService.class.getSimpleName());
-
-
     }
 
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        currentList = intent.getStringArrayExtra(MessageSMSListener.key_extra);
+        current_messages = intent.getStringArrayExtra(MessageSMSListener.key_extra_2);
         Socket socketInstance = SocketObject.getInstance(MessageSMSListener.URI);
         socketInstance.connect();
         for (int i = 0; i < currentList.length; ++i) {
@@ -39,13 +39,7 @@ public class VRService extends IntentService {
                     "\"sender\": \"" + currentList[i] + "\"\n" +
                     "}");
         }
+        this.startActivity(new Intent(this, MainActivity.class));
     }
 
-    @Override
-    public void onStart(Intent intent, int startId) {
-        super.onStart(intent, startId);
-        currentList = intent.getStringArrayExtra(MessageSMSListener.key_extra);
-        current_messages = intent.getStringArrayExtra(MessageSMSListener.key_extra_2);
-        this.startActivity(new Intent(this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-    }
 }
