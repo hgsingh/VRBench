@@ -66,5 +66,6 @@ public class MainActivity extends AppCompatActivity {
     public void setText(String string) {
         EditText editText = (EditText) findViewById(R.id.edit);
         editText.append(string);
+        restart();
     }
 }
