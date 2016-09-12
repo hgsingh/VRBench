@@ -8,21 +8,26 @@ import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 
+import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.Socket;
+
+import org.json.JSONObject;
 
 public class VRService extends IntentService {
     private static final String TAG = "VRService";
     private static final String event = "device_msg";
     String[] currentList;
     String[] current_messages;
+    int count;
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
-     * <p/>
+     * <p>
      * Used to name the worker thread, important only for debugging.
      */
     public VRService() {
         super(VRService.class.getSimpleName());
+        count = 0;
     }
 
 
@@ -30,8 +35,7 @@ public class VRService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         currentList = intent.getStringArrayExtra(MessageSMSListener.key_extra);
         current_messages = intent.getStringArrayExtra(MessageSMSListener.key_extra_2);
-        Socket socketInstance = SocketObject.getInstance(MessageSMSListener.URI);
-        socketInstance.connect();
+        final Socket socketInstance = SocketObject.getInstance(MessageSMSListener.URI);
         for (int i = 0; i < currentList.length; ++i) {
             socketInstance.emit(event, "{\n" +
                     "\"task\": \"sms_new_message\",\n" +
@@ -39,7 +43,12 @@ public class VRService extends IntentService {
                     "\"sender\": \"" + currentList[i] + "\"\n" +
                     "}");
         }
-        this.startActivity(new Intent(this, MainActivity.class));
+        if (count < 1) {
+            this.startActivity(new Intent(this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            ++count;
+        } else {
+            this.startActivity(new Intent(this, MainActivity.class));
+        }
     }
 
 }

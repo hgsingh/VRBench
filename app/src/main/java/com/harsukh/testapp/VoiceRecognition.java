@@ -1,34 +1,28 @@
 package com.harsukh.testapp;
 
-import android.content.Context;
-import android.content.Intent;
+
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.util.Log;
 
 
-import com.github.nkzawa.socketio.client.Socket;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import hugo.weaving.DebugLog;
 
 
 public class VoiceRecognition implements RecognitionListener {
 
-    private Context context;
     private static final String TAG = "VoiceRec";
     private static final CharSequence initString = "Okay On Star";
-    private Socket socket;
-    private MainActivity activity;
+    private LinkedList<ISpeechObserver> speechObservers;
 
-
-    public VoiceRecognition(Context applicationContext, Socket instance, MainActivity activity) {
+    public VoiceRecognition() {
         Log.d(TAG, "listening");
-        this.context = applicationContext;
-        this.socket = instance;
-        this.activity = activity;
+        speechObservers = new LinkedList<>();
     }
 
 
@@ -60,14 +54,21 @@ public class VoiceRecognition implements RecognitionListener {
 
     @Override
     public void onEndOfSpeech() {
-        activity.endOfSpeech();
+        if (speechObservers.size() > 0) {
+            for (ISpeechObserver speechObserver : speechObservers) {
+                speechObserver.endOfSpeech();
+            }
+        }
     }
 
     @DebugLog
     @Override
     public void onError(int i) {
-        activity.stopListeningActivity();
-        activity.startListeningActivity();
+        if (speechObservers.size() > 0) {
+            for (ISpeechObserver speechObserver : speechObservers) {
+                speechObserver.restart();
+            }
+        }
     }
 
     @DebugLog
@@ -77,21 +78,14 @@ public class VoiceRecognition implements RecognitionListener {
         for (String command : matches) {
             System.out.println(command);
         }
-        sendString(matches);
+        if (matches != null && speechObservers.size() > 0) {
+            for (ISpeechObserver speechObserver : speechObservers) {
+                speechObserver.emitData(matches);
+                speechObserver.setText(matches);
+            }
+        }
     }
 
-    private void sendString(ArrayList<String> matches) {
-        StringBuilder listString = new StringBuilder();
-        for (String s : matches) {
-            listString.append(s + " ");
-        }
-        socket.connect();
-        socket.emit("device_msg", "{\n" +
-                "\"task\": \"vr_command\",\n" +
-                "\"data\": \"" + listString.toString() + "\"\n" +
-                "}");
-        activity.setText(listString.toString());
-    }
 
     @DebugLog
     @Override
@@ -102,5 +96,9 @@ public class VoiceRecognition implements RecognitionListener {
     @Override
     public void onEvent(int i, Bundle bundle) {
         //dosomething here
+    }
+
+    public void addObserver(ISpeechObserver speechObserver) {
+        speechObservers.add(speechObserver);
     }
 }

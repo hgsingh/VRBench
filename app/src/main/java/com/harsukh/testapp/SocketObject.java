@@ -13,6 +13,7 @@ public class SocketObject {
     public static Socket getInstance(String URI) {
         try {
             socket = IO.socket(URI);
+            socket.connect();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
