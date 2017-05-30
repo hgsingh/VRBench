@@ -16,7 +16,7 @@ import android.widget.Toast;
 public class MessageSMSListener extends BroadcastReceiver {
     public static final String key_extra = "numbers";
     public static final String key_extra_2 = "msgs";
-    public static final String URI = "http://10.251.2.10:1337";
+    public static final String URI = "http://192.168.66.129:1337";
 
     @Override
     public void onReceive(Context context, Intent intent) {
